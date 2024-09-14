@@ -1,0 +1,18 @@
+[
+  {
+    "id": "1",
+    "username": "Alice",
+    "preferences": {
+      "theme": "dark",
+      "notifications": true
+    }
+  },
+  {
+    "id": "2",
+    "username": "Bob",
+    "preferences": {
+      "theme": "light",
+      "notifications": false
+    }
+  }
+]

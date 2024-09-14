@@ -48,4 +48,30 @@ client.on('messageCreate', async (message) => {
     }
 });
 
-client.login('YOUR_BOT_TOKEN');
+// const { getUserField, updateUserField } = require('./data_manager');
+
+// // Example: Get the 'theme' preference for user with ID 1
+// const userId = "1";
+// const theme = getUserField(userId, 'theme');
+// console.log(`User ID ${userId} theme:`, theme);
+
+// // Example: Update the 'theme' preference for user with ID 1
+// updateUserField(userId, 'theme', 'light');
+
+// // Verify the update
+// const updatedTheme = getUserField(userId, 'theme');
+// console.log(`Updated theme for user ID ${userId}:`, updatedTheme);
+
+// // Example: Get a top-level field like 'username'
+// const username = getUserField(userId, 'username');
+// console.log(`Username for user ID ${userId}:`, username);
+
+// // Example: Update a top-level field like 'username'
+// updateUserField(userId, 'username', 'AliceUpdated');
+
+// // Verify the update
+// const updatedUsername = getUserField(userId, 'username');
+// console.log(`Updated username for user ID ${userId}:`, updatedUsername);
+
+
+client.login('DISCORD_BOT_TOKEN');
