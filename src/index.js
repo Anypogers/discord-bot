@@ -19,18 +19,26 @@ const client = new Client({
 const commandHandlers = require('./commandHandlers');
 
 client.on('ready', (c) => {
-    console.log(`${c.user.username} is online.`);
-    console.log(`ID = ${c.user.id}`);
-})
+  console.log(`${c.user.username} is online.`);
+  console.log(`ID = ${c.user.id}`);
+});
 
 client.on("messageCreate", (message) => {
+  
   console.log("Message Received... Analizing...")
   if (message.author.bot) {
     console.log("Bot Message, +gitIGNORE")
     return;
   }
-  if (command in commandHandlers) {
-    commandHandlers[command](message, ...args); // Pass the message object and args
+  const text_message = message.content.trim();
+  const args = text_message.split(' ').slice(1); // Split the command and extract args
+  const commandName = text_message.split(' ')[0]; // Extract the command name
+  if (commandName in commandHandlers) {
+    try {
+      commandHandlers[commandName](message, ...args); // Pass the message object and args
+    } catch (error) {
+      console.error(`Error handling command "${commandName}":`, error);
+    }
     return;
   }
   console.log(`Found no Matches for message "${message.content}"`);
