@@ -16,6 +16,8 @@ const client = new Client({
   ]
 });
 
+const commandHandlers = require('./commandHandlers');
+
 client.on('ready', (c) => {
     console.log(`${c.user.username} is online.`);
     console.log(`ID = ${c.user.id}`);
@@ -27,14 +29,8 @@ client.on("messageCreate", (message) => {
     console.log("Bot Message, +gitIGNORE")
     return;
   }
-  if (message.content === "Ping!"){
-    message.reply("Pong!");
-    console.log("PONG FUNCTION-ish");
-    return;
-  }
-  if (message.content === "Test"){
-    message.reply("[ULTRAKILL](http://devilmayquake.com)");
-    console.log("ULTRAKILL FUNCTION-ish");
+  if (command in commandHandlers) {
+    commandHandlers[command](message, ...args); // Pass the message object and args
     return;
   }
   console.log(`Found no Matches for message "${message.content}"`);
