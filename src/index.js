@@ -30,20 +30,16 @@ client.on("messageCreate", (message) => {
   if (!message.content.startsWith(commandPrefix)) {
     return; // Ignore the message if it doesn't start with the prefix
   }
-  if (message.author.id != process.env.OWNER_ID){
-    message.reply('You ain\'t the adming around here! We have **nothing** to discuss!')
-    return;
-  }
   if (message.author.bot) {
-    console.log("Bot Message, +gitIGNORE")
     return;
   }
+  console.log(message)
   const text_message = message.content.slice(commandPrefix.length).trim().toLowerCase();
   const args = text_message.split(' ').slice(1); // Split the command and extract args
   const commandName = text_message.split(' ')[0]; // Extract the command name
   if (commandName in prefixHandlers) {
     try {
-      prefixCommands[commandName](message, ...args); // Pass the message object and args
+      prefixHandlers[commandName](message, ...args); // Pass the message object and args
     } catch (error) {
       console.error(`Error handling prefix command "${commandName}":`, error);
     }
@@ -55,9 +51,10 @@ client.on('interactionCreate', (interaction) => {
   if (!interaction.isChatInputCommand()){
     return;
   }
+  console.log(interaction)
   if (interaction.commandName in slashHandlers) {
     try {
-      slashCommands[interaction.commandName](interaction); // Pass the message object and args
+      slashHandlers[interaction.commandName](interaction); // Pass the message object and args
     } catch (error) {
       console.error(`Error handling slash command "${interaction.commandName}":`, error);
     }

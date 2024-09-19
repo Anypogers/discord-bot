@@ -8,10 +8,6 @@ import {
 
 const commands = [
   {
-    name: 'rps',
-    description: 'Rock... Paper... Scissors... FIGHT!'
-  },
-  {
     name: 'ping',
     description: 'pong'
   },
@@ -32,7 +28,33 @@ const commands = [
         required: true
       }
     ]
-  }
+  },
+  {
+    name: 'rps',
+    description: 'Rock... Paper... Scissors... FIGHT!',
+    options: [
+      {
+        name: 'choice',
+        description: 'what do you choose?',
+        type: ApplicationCommandOptionType.String,
+        choices: [
+          {
+            name: 'rock',
+            value: 'rock'
+          },
+          {
+            name: 'paper',
+            value: 'paper'
+          },
+          {
+            name: 'scissors',
+            value: 'scissors'
+          }
+        ],
+        required: true
+      },
+    ]
+  },
 ];
 
 const rest = new REST({version: '10'}).setToken(process.env.DISCORD_TOKEN);

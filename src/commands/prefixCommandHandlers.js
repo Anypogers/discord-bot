@@ -1,5 +1,3 @@
-const activeGames = {};
-
 const prefixCommands = {
   'ping': (message) => {
     message.reply('Pong!');
@@ -26,9 +24,6 @@ const prefixCommands = {
     const randomNumber = Math.floor(Math.random() * (maxVal - minVal + 1)) + minVal;
     // Reply with the generated random number
     message.reply(`Random number between ${minVal} and ${maxVal}: ${randomNumber}`);
-  },
-  'rps': (message, choice) => {
-    message.reply("CALMA KRL")
   },
 };
 
