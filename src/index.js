@@ -1,13 +1,11 @@
 import dotenv from 'dotenv'
 dotenv.config();
-import prefixHandlers from './commands/prefixCommandHandlers.js'
-import slashHandlers from './commands/slashCommandHandlers.js'
+import commandHandler from './commands/commandHandler.js'
 
 import {
   Client,
   GatewayIntentBits
 } from 'discord.js';
-import prefixCommands from './commands/prefixCommandHandlers.js';
 
 const commandPrefix = '&'; // Set your command prefix here
 
@@ -33,13 +31,10 @@ client.on("messageCreate", (message) => {
   if (message.author.bot) {
     return;
   }
-  console.log(message)
-  const text_message = message.content.slice(commandPrefix.length).trim().toLowerCase();
-  const args = text_message.split(' ').slice(1); // Split the command and extract args
-  const commandName = text_message.split(' ')[0]; // Extract the command name
-  if (commandName in prefixHandlers) {
+  const commandName = message.content.slice(commandPrefix.length).trim().toLowerCase().split(' ')[0]; // Extract the command name
+  if (commandName.split(' ')[0] in commandHandler) {
     try {
-      prefixHandlers[commandName](message, ...args); // Pass the message object and args
+      commandHandler[commandName](message); // Pass the message object and args
     } catch (error) {
       console.error(`Error handling prefix command "${commandName}":`, error);
     }
@@ -51,7 +46,6 @@ client.on('interactionCreate', (interaction) => {
   if (!interaction.isChatInputCommand()){
     return;
   }
-  console.log(interaction)
   if (interaction.commandName in slashHandlers) {
     try {
       slashHandlers[interaction.commandName](interaction); // Pass the message object and args
