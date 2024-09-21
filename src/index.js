@@ -46,9 +46,9 @@ client.on('interactionCreate', (interaction) => {
   if (!interaction.isChatInputCommand()){
     return;
   }
-  if (interaction.commandName in slashHandlers) {
+  if (interaction.commandName in commandHandler) {
     try {
-      slashHandlers[interaction.commandName](interaction); // Pass the message object and args
+      commandHandler[interaction.commandName](interaction); // Pass the message object and args
     } catch (error) {
       console.error(`Error handling slash command "${interaction.commandName}":`, error);
     }

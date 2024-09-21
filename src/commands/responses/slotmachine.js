@@ -1,6 +1,6 @@
 import { EmbedBuilder } from "discord.js";
 
-export default function slotmachine(command){
+export function slotmachine(command){
   const jackpot = getJackpot(); // [0] = Name | [1] = Pull | [2] = Reward
   const embed = new EmbedBuilder()
     .setTitle('[ ! ] SLOT MACHINE [ ! ]')

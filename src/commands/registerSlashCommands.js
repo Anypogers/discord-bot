@@ -55,6 +55,10 @@ const commands = [
       },
     ]
   },
+  {
+    name: 'slotmachine',
+    description: `Let's go gambling!`
+  },
 ];
 
 const rest = new REST({version: '10'}).setToken(process.env.DISCORD_TOKEN);

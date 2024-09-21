@@ -1,4 +1,4 @@
-export default function rng(command, min, max){
+export function rng(command, min, max){
   const minVal = parseInt(min);
   const maxVal = parseInt(max);
   if (min == undefined){

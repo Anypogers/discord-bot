@@ -2,5 +2,8 @@
 *(He's so cool, he's The World Machine from indie video game OneShot)*
 ___
 
-### All the methods:
-**NONE LOOOOL WE STILL WORKING ON THIS SHIT HAHAHHAHAHAH**
+There are so many cool things to do with the bot.
+Like... Uh...
+Ummm...
+___
+Yeah.
