@@ -53,11 +53,29 @@ const commands = [
         ],
         required: true
       },
-    ]
+    ],
   },
   {
     name: 'slotmachine',
     description: `Let's go gambling!`
+  },
+  {
+    name: 'cookie',
+    description: 'oh no...',
+    options: [
+      {
+        name: 'what-to-do',
+        description: 'What will you do?',
+        type: ApplicationCommandOptionType.String,
+        choices: [
+          {
+            name: 'click',
+            value: 'click',
+          }
+        ],
+        required : true
+      },
+    ],
   },
 ];
 

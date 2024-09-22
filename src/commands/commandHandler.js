@@ -5,10 +5,6 @@ const commands = {
   'ping': (command) => {
     response.ping(command);
   },
-  'echo': (command) => {
-    const message = getPrefixArgs(command).join(" ");
-    response.echo(command, message);
-  },
   'rng': (command) => {
     const min = getArgs(command)[0];
     const max = getArgs(command)[1];
@@ -18,8 +14,12 @@ const commands = {
     response.slotmachine(command);
   },
   'rps': (command) => {
-    const choice = getArgs(command)[0]
+    const choice = getArgs(command)[0];
     response.rps(command, choice,isInteraction(command));
+  },
+  'cookie': (command) => {
+    const choice = getArgs(command)[0];
+    response.cookie(command, choice, isInteraction(command));
   }
 };
 
