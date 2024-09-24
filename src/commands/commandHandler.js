@@ -25,6 +25,9 @@ const commands = {
     const args = getArgs(command);
     response.getData(command, args[0], args[1]);
   },
+  'help': (command) => {
+    response.help(command);
+  }
 };
 
 function getMessage(command){

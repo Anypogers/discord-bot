@@ -1,7 +1,5 @@
 import Database from 'better-sqlite3';
-import dotenv from 'dotenv';
 const db = new Database('src/database/data.db');
-dotenv.config();
 
 // SELECT $columns[n] FROM $table WHERE $column_where = $equals_to
 export function select(columns, table, column_where, equals_to){
