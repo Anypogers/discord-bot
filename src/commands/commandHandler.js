@@ -20,14 +20,18 @@ const commands = {
   'cookie': (command) => {
     const choice = getArgs(command)[0];
     response.cookie(command, choice, isInteraction(command));
-  }
+  },
+  'getData': (command) => {
+    const args = getArgs(command);
+    response.getData(command, args[0], args[1]);
+  },
 };
 
 function getMessage(command){
   if (isInteraction(command)){
     return command.commandName;
   }
-  return command.content.slice(commandPrefix.length).trim().toLowerCase();
+  return command.content.slice(commandPrefix.length).trim();
 }
   
 function getArgs(command){

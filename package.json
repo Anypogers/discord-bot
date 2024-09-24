@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "regSlashCmd": "node src/commands/registerSlashCommands.js",
     "createDB": "node src/database/createDatabase.js",
-    "start": "node src/index.js"
+    "start": "start.bat"
   },
   "keywords": [],
   "author": "",
