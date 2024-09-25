@@ -1,5 +1,7 @@
 import Database from 'better-sqlite3';
-const db = new Database('src/database/data.db');
+import fs from 'node:fs';
+const data_folder_path = './data/';
+const db = new Database(`${data_folder}data.db`);
 
 // SELECT $columns[n] FROM $table WHERE $column_where = $equals_to
 export function select(columns, table, column_where, equals_to){
@@ -27,9 +29,9 @@ export function join_select(columns, table,column_where, equals_to){
 // INSERT INTO $table($columns[n]) VALUES ($values[n])
 export function insert(table, columns, values){
   if (columns.length != values.length){
-    console.error(`Error handelling "insert" function inside "src/database/dataManager.js"`)
-    console.error(`Array "columns" size is different than "values" array size!`)
-    console.error(`columns: ${columns.length} | values: ${values.length}`)
+    console.error(`Error handelling "insert" function inside "src/database/dataManager.js"`);
+    console.error(`Array "columns" size is different than "values" array size!`);
+    console.error(`columns: ${columns.length} | values: ${values.length}`);
     return
   }
   const placeholders = values.map(() => '?').join(', ');
@@ -37,7 +39,7 @@ export function insert(table, columns, values){
   try{
     db.prepare(insert).run(...values);
   } catch (error) {
-    console.error("error handelling 'insert' function inside 'src/database/dataManager.js':\n", error)
+    console.error("error handelling 'insert' function inside 'src/database/dataManager.js':\n", error);
   }
   return 0;
 }
@@ -45,9 +47,9 @@ export function insert(table, columns, values){
 // UPDATE $table SET $columns[n] = $values[n] WHERE $column_where = $equals_to
 export function update(table, columns, values, column_where, equals_to){
   if (columns.length != values.length){
-    console.error(`Error handelling "update" function inside "src/database/dataManager.js"`)
-    console.error(`Array "columns" size is different than "values" array size!`)
-    console.error(`columns: ${columns.length} | values: ${values.length}`)
+    console.error(`Error handelling "update" function inside "src/database/dataManager.js"`);
+    console.error(`Array "columns" size is different than "values" array size!`);
+    console.error(`columns: ${columns.length} | values: ${values.length}`);
     return
   }
   const setClauses = columns.map((col) => `${col} = ?`).join(', ');
@@ -55,7 +57,34 @@ export function update(table, columns, values, column_where, equals_to){
   try {
     db.prepare(update).run(...values, equals_to);
   } catch (error) {
-    console.error("error handelling 'update' function inside 'dataManager.js':\n", error)
+    console.error("error handelling 'update' function inside 'dataManager.js':\n", error);
   }
   return 0;
+}
+
+// Get data in .json file
+export function select_json(discord_id){
+  const file = `${data_folder_path}${discord_id}.json`;
+  fs.readFile(file, 'utf8', (error, data) => {
+    if (error) {
+      console.log("error handelling 'select_json' function inside 'dataManager.js':\n",error);
+      return 'ERROR'
+    }
+    try{
+      return JSON.parse(data);
+    } catch (parseError){
+      console.error("error trying to parse 'data' into json inside function 'select_json' inside 'dataManager.js'\n",parseError);
+    }
+  });
+}
+
+// Save to .json file
+export function insert_json(discord_id, data){
+  const file = `${data_folder_path}${discord_id}.json`;
+  fs.writeFile(file, JSON.stringify(data, null, 2), (error) => {
+    if (error) {
+      console.log("error handelling 'insert_json' function inside 'dataManager.js':\n",error);
+    }
+    return null;
+  });
 }

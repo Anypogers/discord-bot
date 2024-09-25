@@ -1,4 +1,5 @@
 node_modules
-src/database/data.db
+src/database/data/*.db
+src/database/data/*.json
 start.bat
 .env
