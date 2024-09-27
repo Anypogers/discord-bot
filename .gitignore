@@ -1,5 +1,6 @@
 node_modules
-src/database/data/*.db
-src/database/data/*.json
+src/database/data/*
+*sql
+.vscode
 start.bat
 .env

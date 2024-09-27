@@ -1,26 +1,43 @@
 import { select, join_select} from '../../database/dataManager.js';
 
 export function getData(command, table, who){
+  let selection = null;
   if (who == null){
     who = command.author.username;
   }
   who = who.charAt(0).toUpperCase() + who.slice(1);
-  const selection = selection_handler[table](who);
+  if (table == null){
+    table = 'users'
+  }
+  if (table.toLowerCase() in selection_handler){
+    selection = selection_handler[table](who);
+  }
   if (selection == null){
     command.reply("No data found!");
-  } else if (selection == -1){
-    command.reply("No spoilers (:<")
-  } else {
-    command.channel.send(`Name: ${selection.user_name}\nEthnicity: ${selection.ethnicity}`);
+    return
   }
+  if (selection == -1){
+    command.reply("No spoilers (:<");
+    return
+  }
+  const selectedKeys = Object.keys(selection);
+  const selectedValues = Object.values(selection);
+  let selection_result = "";
+  for (let i = 0; i < selectedKeys.length; i++) {
+    selection_result += `- ${selectedKeys[i]} = ${selectedValues[i]}`;
+    if (i != selectedKeys.length - 1){
+      selection_result += "\n";
+    }
+  }
+  command.channel.send(`~ __{ Results }__ ~\n${selection_result}`);
 }
 
 const selection_handler = {
   'users': (who) => {
-    return select(["user_name", "ethnicity"], "users", "user_name", who);
+    return select(["user_name as Name", "ethnicity as Ethnicity"], "users", "user_name", who);
   },
   'bank': (who) => {
-    return join_select(["brl, dollars, tier"], "normal_bank", "user_name", who);
+    return join_select(["brl as BRL$, dollars as USD$, tier as 'Bank Tier'"], "normal_bank", "user_name", who);
   },
   'special_bank': () => {return -1},
   'hidden_bank': () => {return -1},

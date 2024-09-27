@@ -1,7 +1,6 @@
 import Database from 'better-sqlite3';
 import fs from 'node:fs';
-const data_folder_path = './data/';
-const db = new Database(`${data_folder}data.db`);
+const db = new Database(`src/database/data/data.db`);
 
 // SELECT $columns[n] FROM $table WHERE $column_where = $equals_to
 export function select(columns, table, column_where, equals_to){
@@ -64,7 +63,7 @@ export function update(table, columns, values, column_where, equals_to){
 
 // Get data in .json file
 export function select_json(discord_id){
-  const file = `${data_folder_path}${discord_id}.json`;
+  const file = `./data/${discord_id}.json`;
   fs.readFile(file, 'utf8', (error, data) => {
     if (error) {
       console.log("error handelling 'select_json' function inside 'dataManager.js':\n",error);
@@ -80,7 +79,7 @@ export function select_json(discord_id){
 
 // Save to .json file
 export function insert_json(discord_id, data){
-  const file = `${data_folder_path}${discord_id}.json`;
+  const file = `./data/${discord_id}.json`;
   fs.writeFile(file, JSON.stringify(data, null, 2), (error) => {
     if (error) {
       console.log("error handelling 'insert_json' function inside 'dataManager.js':\n",error);
