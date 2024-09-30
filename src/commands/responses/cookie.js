@@ -1,4 +1,4 @@
-import { Embed } from "discord.js";
+import { EmbedBuilder } from "discord.js";
 
 const cookies = {
   "ammount" : 0,
@@ -42,7 +42,10 @@ const possibleShopItems = {
   ]
 }
 
-export function cookie(command, choice = 'stats', args, isInteraction) {
+export function cookie(command, choice = 'stats', args = null, isInteraction) {
+  if (args == undefined) {
+    args = null;
+  }
   if (choice in possibilities){
     possibilities[choice](command, args);
   }
@@ -54,17 +57,17 @@ export function cookie(command, choice = 'stats', args, isInteraction) {
   }
 }
 
-function showShop(){
-  if (shop == null) {
+function showShop(command){
+  const isShopEmpty = shopItems.every(item => item === undefined);
+  if (isShopEmpty) {
     generateShop();
   }
-  const embed = new Embed
-  shopLayout.setColor(shopTier);
-  shopLayout.setTitle('~ { *Cookie Shop* } ~');
-  shopLayout.setDescription(`*__Total Cookies: ${cookies.ammount}__*`);
+  const embed = new EmbedBuilder()
+  embed.setTitle('~ { *Cookie Shop* } ~');
+  embed.setDescription(`*__Total Cookies: ${cookies.ammount}__*`);
   let fields = new Array(6)
   shopItems.forEach((item, index) => {
-    let shouldInline = true ? index == 2 : false;
+    let shouldInline = false ? index == 2 : true;
     if (item) {
       embed.addFields({
         name: `${item.name}`,
@@ -79,6 +82,7 @@ function showShop(){
       });
     }
   });
+  command.reply({embeds: [embed]});
 }
 
 function generateShop(){
@@ -89,7 +93,7 @@ function generateShop(){
 
 function generateSlot() {
   let slot;
-  const chance = Math.ramdom();
+  const chance = Math.random();
   if (chance > 0.90) {
     return null;
   } else if (chance > 0.2){
@@ -97,7 +101,7 @@ function generateSlot() {
   } else if (chance > 0.05){
     slot = 'Rare';
   } else {
-    slot = 'ULTRARARE';
+    slot = 'ULTRA RARE';
   }
   const item = possibleShopItems[slot];
   return item[Math.floor(Math.random() * item.length)];
@@ -154,11 +158,11 @@ const possibilities = {
     });
   },
   'shop': (command, args) => {
-    if (args[0] == null){
-      showShop()
-      return
+    if (args == null){
+      showShop(command);
+      return;
     }
-    buyItem(command, +args[0]);
+    buyItem(command, +args);
   },
   'stats': (command) => {
     if (Math.random() < 0.2 && cookies.ammount > 1) {

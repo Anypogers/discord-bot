@@ -20,7 +20,7 @@ const commands = {
   },
   'cookie': (command) => {
     const choice = getArgs(command)[0];
-    const args = getArgs(command).shift();
+    const args = getArgs(command)[1];
     response.cookie(command, choice, args);
   },
   'getData': (command) => {
