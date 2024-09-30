@@ -1,10 +1,49 @@
-import { EmbedBuilder } from "discord.js";
+import { EmbedBuilder } from 'discord.js';
+import { select, update} from '../../database/dataManager.js';
 
-export function slotmachine(command){
-  const jackpot = getJackpot(); // [0] = Name | [1] = Pull | [2] = Reward
+const allowed_currency = [
+  'dollars'
+]
+
+export function slotmachine(command, currency, is_interaction){
+  const isCurrencyAllowed = (allowed_currency.indexOf(currency) > -1);
+  if (!isCurrencyAllowed){
+    command.reply({
+      content: `Sorry but that currency is not allowed... \n The only currency allowed here are dollars.`,
+      ephemeral: true
+    });
+    return
+  }
+  let user_id;
+  if (is_interaction){
+    user_id = command.user.id
+  } else {
+    user_id = command.author.id
+  }
+  let user_money = select(['dollars'], 'normal_bank', 'user_id', user_id).dollars
+  if (user_money < 5 || user_money == null) {
+    if (user_money == null) {
+      user_money = 0;
+    }
+    command.reply({
+      content: `You don't have enough money to do this...\n You need at least 5$, you have ${user_money}$`,
+      ephemeral: true
+    });
+    return;
+  }
+  let jackpot = getJackpot(); // [0] = Name | [1] = Pull | [2] = Reward
+  jackpot[2] -= 5;
+  user_money += jackpot[2];
+  update('normal_bank', ['dollars'], [(user_money)], 'user_id', user_id);
+  jackpot[2] += 5;
+  const sm = generateSlotmachine(currency, jackpot, user_money);
+  command.reply({embeds: [sm]});
+};
+
+function generateSlotmachine(currency, jackpot, final_balance){
   const embed = new EmbedBuilder()
-    .setTitle('[ ! ] SLOT MACHINE [ ! ]')
-    .setDescription(`*Let's Go Gambling!* \n`)
+    .setTitle('[ **!** ] ***SLOT MACHINE*** [ **!** ]')
+    .setDescription(`__[Currency: ${currency}]__\n`)
     .setColor('Random')
     .addFields(
       {
@@ -19,12 +58,12 @@ export function slotmachine(command){
       },
       {
         name: `~ { *Results* }~`,
-        value: `Pull : ${jackpot[1]}\nJackpot : ${jackpot[0]}\nReward: ${jackpot[2]}`,
+        value: `Pull : ${jackpot[1]}\nJackpot : ${jackpot[0]}\nReward: ${jackpot[2]}$\nFinal Balance: ${final_balance}`,
         inline: true,
       }
     );
-  command.channel.send({embeds: [embed]});
-};
+  return embed;
+}
 
 function getJackpot(){
   let num1 = Math.floor(Math.random() * 10);

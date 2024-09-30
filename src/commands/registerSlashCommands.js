@@ -57,7 +57,21 @@ const commands = [
   },
   {
     name: 'slotmachine',
-    description: `Let's go gambling!`
+    description: `Let's go gambling!`,
+    options: [
+      {
+        name: 'currency',
+        description: 'What currency will you use?',
+        type: ApplicationCommandOptionType.String,
+        choices: [
+          {
+            name: 'dollars',
+            value: 'dollars'
+          }
+        ],
+        required: true
+      }
+    ]
   },
   {
     name: 'cookie',

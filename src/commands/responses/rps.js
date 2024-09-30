@@ -25,21 +25,21 @@ export function rps(command,choice, isInteraction){
     return;
   }
   if(gameState[0].name == null){
-    gameState[0].name = command.user.globalName;
+    gameState[0].name = command.user.displayName;
     gameState[0].choice = choice;
     command.reply({
       content: `You chose: ${choice}`,
       ephemeral: true
     });
   } else if (gameState[1].name == null){
-    if (gameState[0].name == command.user.globalName){
+    if (gameState[0].name == command.user.displayName){
       gameState[0].choice = choice;
       command.reply({
         content: `You changed your choice to: ${choice}`,
         ephemeral: true
       });
     } else {
-      gameState[1].name = command.user.globalName;
+      gameState[1].name = command.user.displayName;
       gameState[1].choice = choice;
       command.reply({
         content: `You chose: ${choice}`,

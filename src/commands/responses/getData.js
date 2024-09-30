@@ -37,7 +37,7 @@ const selection_handler = {
     return select(["user_name as Name", "ethnicity as Ethnicity"], "users", "user_name", who);
   },
   'bank': (who) => {
-    return join_select(["brl as BRL$, dollars as USD$, tier as 'Bank Tier'"], "normal_bank", "user_name", who);
+    return join_select(["brl as BRL$, dollars AS USD$"], "normal_bank", "user_name", who);
   },
   'special_bank': () => {return -1},
   'hidden_bank': () => {return -1},

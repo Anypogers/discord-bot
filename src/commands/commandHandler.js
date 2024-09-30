@@ -11,7 +11,8 @@ const commands = {
     response.rng(command, min, max);
   },
   'slotmachine': (command) => {
-    response.slotmachine(command);
+    const currency = getArgs(command)[0];
+    response.slotmachine(command, currency, isInteraction(command));
   },
   'rps': (command) => {
     const choice = getArgs(command)[0];
@@ -19,7 +20,8 @@ const commands = {
   },
   'cookie': (command) => {
     const choice = getArgs(command)[0];
-    response.cookie(command, choice, isInteraction(command));
+    const args = getArgs(command).shift();
+    response.cookie(command, choice, args);
   },
   'getData': (command) => {
     const args = getArgs(command);
@@ -34,18 +36,21 @@ function getMessage(command){
   if (isInteraction(command)){
     return command.commandName;
   }
-  return command.content.slice(commandPrefix.length).trim();
+  const result = command.content.slice(commandPrefix.length).trim();
+  return result;
 }
   
 function getArgs(command){
   if (isInteraction(command)){
-    return command.options._hoistedOptions.map(option => option.value);
+    const result = command.options._hoistedOptions.map(option => option.value);
+    return result;
   }
-  return getMessage(command).split(' ').slice(1);
+  const result = getMessage(command).split(' ').slice(1);
+  return result;
 }
 
 function isInteraction(command){
-  return command.isCommand && command.commandName !== undefined
+  return command.isCommand && command.commandName !== undefined;
 }
 
 export default commands;

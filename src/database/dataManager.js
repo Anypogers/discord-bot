@@ -17,7 +17,7 @@ export function select(columns, table, column_where, equals_to){
 // fucking hate inner join... it make my brain hurty (also js sucks)
 export function join_select(columns, table,column_where, equals_to){
   const mapping = (tab, cols) => cols.map(col => `${tab}.${col}`).join(', ');
-  const join_selection = `SELECT users.user_name, ${mapping(table, columns)} FROM ${table} JOIN users ON ${table}.user_id = users.discord_id WHERE users.${column_where} = ?`;
+  const join_selection = `SELECT users.user_name AS Name, ${mapping(table, columns)} FROM ${table} JOIN users ON ${table}.user_id = users.discord_id WHERE users.${column_where} = ?`;
   try{
     return db.prepare(join_selection).get(equals_to);
   } catch (error) {
@@ -51,10 +51,10 @@ export function update(table, columns, values, column_where, equals_to){
     console.error(`columns: ${columns.length} | values: ${values.length}`);
     return
   }
-  const setClauses = columns.map((col) => `${col} = ?`).join(', ');
-  const update = `UPDATE ${table} SET ${setClauses} WHERE ${column_where} = ?`;
+  const setClauses = columns.map((col, index) => `${col} = ${values[index]}`).join(', ');
+  const update = `UPDATE ${table} SET ${setClauses} WHERE ${column_where} = ${equals_to}`;
   try {
-    db.prepare(update).run(...values, equals_to);
+    db.prepare(update).run();
   } catch (error) {
     console.error("error handelling 'update' function inside 'dataManager.js':\n", error);
   }
