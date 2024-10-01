@@ -1,3 +1,4 @@
+import { select, update } from "../../database/dataManager.js";
 import { EmbedBuilder } from "discord.js";
 
 const cookies = {
@@ -13,41 +14,81 @@ const possibleShopItems = {
     {
       'name': 'cookie',
       'price': 5,
-      'stock': 25
+      'stock': 10,
+      'result': function(command) {
+        this.stock -= 1;
+        command.reply("Thank you for buying cookies!\n...\n*with cookies...*")
+      }
     },
   ],
   'Rare': [
     {
       'name': 'Dollar',
       'price': 2,
-      'stock': 50
+      'stock': 10,
+      'result': function(command, userId) {
+        this.stock -= 1;
+        const user_money = select(['dollars'], 'normal_bank', 'user_id', +userId);
+        update('normal_bank', ['dollars'], [(+user_money + 1)], 'user_id', +userId);
+        command.reply("Here is your dollar, and thank you for the cookies!");
+      }
     },
     {
       'name': 'Mystery Box',
-      'price': 50,
-      'stock': 3
-    }
+      'price': 75,
+      'stock': 3,
+      'result': function(command) {
+        this.stock -= 1;
+        command.reply("Hope you get something good!")
+      }
+    },
+    {
+      'name': 'Item Upgrade',
+      'price': 150,
+      'stock': 1,
+      'result': function(command) {
+        this.stock -= 1;
+        command.reply("Hopefully this will come in handy!")
+      }
+    },
+    {
+      'name': 'Simple Key',
+      'price': 30,
+      'stock': 1,
+      'result': function(command) {
+        this.stock -= 1;
+        command.reply("Do you have something to use it on?")
+      }
+    },
   ],
   'ULTRA RARE':[
     {
-      'name': 'Secret Box',
-      'price': 150,
-      'stock': 1
+      'name': 'Gold Star',
+      'price': 1000,
+      'stock': 1,
+      'result': function(command) {
+        this.stock -= 1;
+        command.reply("***Oooo So Shiny!~ :niko_SUPER_happy:***")
+      }
     },
     {
-      'name': 'Gold Star',
-      'price': 500,
-      'stock': 1
-    }
+      'name': 'Gold Star Fragment',
+      'price': 300,
+      'stock': 1,
+      'result': function(command) {
+        this.stock -= 1;
+        command.reply("If you can *fuse* it togueter with *other* fragments it will become something **wonderfull**!")
+      }
+    },
   ]
 }
 
-export function cookie(command, choice = 'stats', args = null, isInteraction) {
+export function cookie(command, choice = 'stats', args = null, userId) {
   if (args == undefined) {
     args = null;
   }
   if (choice in possibilities){
-    possibilities[choice](command, args);
+    possibilities[choice](command, args, userId);
   }
   if (cookies.ammount > cookies.highest){
     cookies.highest = cookies.ammount;
@@ -65,7 +106,6 @@ function showShop(command){
   const embed = new EmbedBuilder()
   embed.setTitle('~ { *Cookie Shop* } ~');
   embed.setDescription(`*__Total Cookies: ${cookies.ammount}__*`);
-  let fields = new Array(6)
   shopItems.forEach((item, index) => {
     let shouldInline = false ? index == 2 : true;
     if (item) {
@@ -89,14 +129,15 @@ function generateShop(){
   for (let i = 0; i < shopItems.length; i++) {
       shopItems[i] = generateSlot();
   }
+  console.log(shopItems);
 }
 
 function generateSlot() {
   let slot;
   const chance = Math.random();
-  if (chance > 0.90) {
+  if (chance > 0.85) {
     return null;
-  } else if (chance > 0.2){
+  } else if (chance > 0.3){
     slot = 'Common';
   } else if (chance > 0.05){
     slot = 'Rare';
@@ -104,10 +145,10 @@ function generateSlot() {
     slot = 'ULTRA RARE';
   }
   const item = possibleShopItems[slot];
-  return item[Math.floor(Math.random() * item.length)];
+  return {...item[Math.floor(Math.random() * item.length)]};
 }
 
-function buyItem(command, itemToBuy){
+function buyItem(command, itemToBuy, userId){
   if (itemToBuy == null || itemToBuy == NaN || itemToBuy < 1 || itemToBuy > 6 || shopItems[itemToBuy - 1] == null) {
     command.reply({
       content: `...what do you want to buy?`,
@@ -131,7 +172,7 @@ function buyItem(command, itemToBuy){
   }
   cookies.ammount -= shopItems[itemToBuy - 1].price;
   shopItems[itemToBuy - 1].stock -= 1;
-  command.reply(`Thank you for buying ${shopItems[itemToBuy - 1].name}!`);
+  shopItems[itemToBuy - 1].result(command, userId)
 }
 
 const possibilities = {
@@ -157,12 +198,12 @@ const possibilities = {
       ephemeral:true
     });
   },
-  'shop': (command, args) => {
+  'shop': (command, args, userId) => {
     if (args == null){
       showShop(command);
       return;
     }
-    buyItem(command, +args);
+    buyItem(command, +args, userId);
   },
   'stats': (command) => {
     if (Math.random() < 0.2 && cookies.ammount > 1) {

@@ -12,7 +12,7 @@ const commands = {
   },
   'slotmachine': (command) => {
     const currency = getArgs(command)[0];
-    response.slotmachine(command, currency, isInteraction(command));
+    response.slotmachine(command, currency, getUserId(command));
   },
   'rps': (command) => {
     const choice = getArgs(command)[0];
@@ -21,7 +21,7 @@ const commands = {
   'cookie': (command) => {
     const choice = getArgs(command)[0];
     const args = getArgs(command)[1];
-    response.cookie(command, choice, args);
+    response.cookie(command, choice, args, getUserId(command));
   },
   'getData': (command) => {
     const args = getArgs(command);
@@ -51,6 +51,14 @@ function getArgs(command){
 
 function isInteraction(command){
   return command.isCommand && command.commandName !== undefined;
+}
+
+function getUserId(command){
+  if (isInteraction(command)){
+    return command.user.id;
+  } else {
+    return command.author.id;
+  }
 }
 
 export default commands;

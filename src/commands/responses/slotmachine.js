@@ -5,7 +5,7 @@ const allowed_currency = [
   'dollars'
 ]
 
-export function slotmachine(command, currency, is_interaction){
+export function slotmachine(command, currency, userId){
   const isCurrencyAllowed = (allowed_currency.indexOf(currency) > -1);
   if (!isCurrencyAllowed){
     command.reply({
@@ -14,13 +14,7 @@ export function slotmachine(command, currency, is_interaction){
     });
     return
   }
-  let user_id;
-  if (is_interaction){
-    user_id = command.user.id
-  } else {
-    user_id = command.author.id
-  }
-  let user_money = select(['dollars'], 'normal_bank', 'user_id', user_id).dollars
+  let user_money = select(['dollars'], 'normal_bank', 'user_id', userId).dollars
   if (user_money < 5 || user_money == null) {
     if (user_money == null) {
       user_money = 0;
@@ -34,7 +28,7 @@ export function slotmachine(command, currency, is_interaction){
   let jackpot = getJackpot(); // [0] = Name | [1] = Pull | [2] = Reward
   jackpot[2] -= 5;
   user_money += jackpot[2];
-  update('normal_bank', ['dollars'], [(user_money)], 'user_id', user_id);
+  update('normal_bank', ['dollars'], [(user_money)], 'user_id', userId);
   jackpot[2] += 5;
   const sm = generateSlotmachine(currency, jackpot, user_money);
   command.reply({embeds: [sm]});
