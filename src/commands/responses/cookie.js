@@ -16,7 +16,6 @@ const possibleShopItems = {
       'price': 5,
       'stock': 10,
       'result': function(command) {
-        this.stock -= 1;
         command.reply("Thank you for buying cookies!\n...\n*with cookies...*")
       }
     },
@@ -27,27 +26,25 @@ const possibleShopItems = {
       'price': 2,
       'stock': 10,
       'result': function(command, userId) {
-        this.stock -= 1;
-        const user_money = select(['dollars'], 'normal_bank', 'user_id', +userId);
-        update('normal_bank', ['dollars'], [(+user_money + 1)], 'user_id', +userId);
+        let user_money = select(['dollars'], 'bank', 'user_id', userId).dollars;
+        user_money += 1;
+        update('bank', ['dollars'], [(user_money)], 'user_id', userId);
         command.reply("Here is your dollar, and thank you for the cookies!");
       }
     },
     {
       'name': 'Mystery Box',
       'price': 75,
-      'stock': 3,
+      'stock': 2,
       'result': function(command) {
-        this.stock -= 1;
         command.reply("Hope you get something good!")
       }
     },
     {
       'name': 'Item Upgrade',
-      'price': 150,
+      'price': 200,
       'stock': 1,
       'result': function(command) {
-        this.stock -= 1;
         command.reply("Hopefully this will come in handy!")
       }
     },
@@ -56,7 +53,6 @@ const possibleShopItems = {
       'price': 30,
       'stock': 1,
       'result': function(command) {
-        this.stock -= 1;
         command.reply("Do you have something to use it on?")
       }
     },
@@ -67,7 +63,9 @@ const possibleShopItems = {
       'price': 1000,
       'stock': 1,
       'result': function(command) {
-        this.stock -= 1;
+        let user_stars = select(['gold_stars'], 'secret_bank', 'user_id', userId).gold_stars;
+        user_stars += 1;
+        update('secret_bank', ['gold_stars'], [(user_stars)], 'user_id', userId);
         command.reply("***Oooo So Shiny!~ :niko_SUPER_happy:***")
       }
     },
@@ -76,7 +74,6 @@ const possibleShopItems = {
       'price': 300,
       'stock': 1,
       'result': function(command) {
-        this.stock -= 1;
         command.reply("If you can *fuse* it togueter with *other* fragments it will become something **wonderfull**!")
       }
     },
@@ -129,7 +126,6 @@ function generateShop(){
   for (let i = 0; i < shopItems.length; i++) {
       shopItems[i] = generateSlot();
   }
-  console.log(shopItems);
 }
 
 function generateSlot() {

@@ -14,7 +14,7 @@ export function slotmachine(command, currency, userId){
     });
     return
   }
-  let user_money = select(['dollars'], 'normal_bank', 'user_id', userId).dollars
+  let user_money = select(['dollars'], 'bank', 'user_id', userId).dollars
   if (user_money < 5 || user_money == null) {
     if (user_money == null) {
       user_money = 0;
@@ -28,7 +28,7 @@ export function slotmachine(command, currency, userId){
   let jackpot = getJackpot(); // [0] = Name | [1] = Pull | [2] = Reward
   jackpot[2] -= 5;
   user_money += jackpot[2];
-  update('normal_bank', ['dollars'], [(user_money)], 'user_id', userId);
+  update('bank', ['dollars'], [(user_money)], 'user_id', userId);
   jackpot[2] += 5;
   const sm = generateSlotmachine(currency, jackpot, user_money);
   command.reply({embeds: [sm]});

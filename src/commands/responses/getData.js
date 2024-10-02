@@ -34,11 +34,12 @@ export function getData(command, table, who){
 
 const selection_handler = {
   'users': (who) => {
-    return select(["user_name as Name", "ethnicity as Ethnicity"], "users", "user_name", who);
+    return select(["user_name AS Name", "ethnicity AS Ethnicity"], "users", "user_name", who);
   },
   'bank': (who) => {
-    return join_select(["brl as BRL$, dollars AS USD$"], "normal_bank", "user_name", who);
+    return join_select(["brl AS BRL$", "dollars AS USD$", "gold AS Gold"], "bank", "user_name", who);
   },
   'special_bank': () => {return -1},
+  'secret_bank': () => {return -1},
   'hidden_bank': () => {return -1},
 }

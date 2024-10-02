@@ -12,37 +12,21 @@ const userTable = db.prepare(`
   );
 `);
 
-const normalBankTable = db.prepare(`
-  CREATE TABLE IF NOT EXISTS normal_bank(
-    user_id INTEGER,
-    tier INTEGER DEFAULT 1,
-    brl REAL DEFAULT 0,
-    dollars REAL DEFAULT 0,
-    FOREIGN KEY (user_id) REFERENCES users(discord_id)
-  );
-`);
-const luxuryBankTable = db.prepare(`
-  CREATE TABLE IF NOT EXISTS luxury_bank(
+const bankTable = db.prepare(`
+  CREATE TABLE bank (
     user_id INTEGER,
     tier INTEGER DEFAULT 1,
     gold INTEGER DEFAULT 0,
     diamond INTEGER DEFAULT 0,
     ruby INTEGER DEFAULT 0,
-    FOREIGN KEY (user_id) REFERENCES users(discord_id)
-  );
-`);
-const virtualBankTable = db.prepare(`
-  CREATE TABLE IF NOT EXISTS virtual_bank(
-   user_id INTEGER,
-    robux INTEGER DEFAULT 0,
-    vbux INTEGER DEFAULT 0,
-    minecoins INTEGER DEFAULT 0,
+    brl REAL DEFAULT 10,
+    dollars REAL DEFAULT 25,
     FOREIGN KEY (user_id) REFERENCES users(discord_id)
   );
 `);
 
-const specialBankTable = db.prepare(`
-  CREATE TABLE IF NOT EXISTS special_bank(
+const secretBankTable = db.prepare(`
+  CREATE TABLE IF NOT EXISTS secret_bank(
     user_id INTEGER,
     miku_dollars REAL DEFAULT 0,
     dog_dollars INTEGER DEFAULT 0,
@@ -51,6 +35,9 @@ const specialBankTable = db.prepare(`
     studs INTEGER DEFAULT 0,
     owo_tokens INTEGER DEFAULT 0,
     gold_stars INTEGER DEFAULT 0,
+    robux INTEGER DEFAULT 0,
+    vbux INTEGER DEFAULT 0,
+    minecoins INTEGER DEFAULT 0,
     FOREIGN KEY (user_id) REFERENCES users(discord_id)
   );
 `);
@@ -64,9 +51,15 @@ const housingTable = db.prepare(`
     bills REAL,
     rent REAL,
     currency TEXT,
-    meters_sqr INTEGER DEFAULT 3,
+    floor_size INTEGER DEFAULT 4,
     floors INTEGER DEFAULT 1,
     FOREIGN KEY (user_id) REFERENCES users(discord_id)
+  );
+`);
+const itemsTable = db.prepare(`
+  CREATE TABLE IF NOT EXISTS items(
+    name TEXT NOT NULL PRIMARY KEY,
+    description TEXT
   );
 `);
 
@@ -81,10 +74,8 @@ try{
 
 function createTables(){
   userTable.run();
-  normalBankTable.run();
-  luxuryBankTable.run();
-  virtualBankTable.run();
-  specialBankTable.run();
+  bankTable.run();
+  secretBankTable.run();
   housingTable.run();
   console.log('Tables created successfully.');;
 }

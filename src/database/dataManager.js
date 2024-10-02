@@ -1,5 +1,4 @@
 import Database from 'better-sqlite3';
-import fs from 'node:fs';
 const db = new Database(`src/database/data/data.db`);
 
 export function select(columns, table, column_where, equals_to){
@@ -53,38 +52,25 @@ export function update(table, columns, values, column_where, equals_to){
     return
   }
   const setClauses = columns.map((col, index) => `${col} = ${values[index]}`).join(', ');
-  const update = `UPDATE ${table} SET ${setClauses} WHERE ${column_where} = ${equals_to}`;
+  const update = `UPDATE ${table} SET ${setClauses} WHERE ${column_where} = ?`;
   try {
-    db.prepare(update).run();
+    db.prepare(update).run(equals_to);
   } catch (error) {
     console.error("error handelling 'update' function inside 'dataManager.js':\n", error);
   }
   return 0;
 }
 
-export function select_json(discord_id){
-  // Get data in .json file
-  const file = `./data/${discord_id}.json`;
-  fs.readFile(file, 'utf8', (error, data) => {
-    if (error) {
-      console.log("error handelling 'select_json' function inside 'dataManager.js':\n",error);
-      return 'ERROR'
-    }
-    try{
-      return JSON.parse(data);
-    } catch (parseError){
-      console.error("error trying to parse 'data' into json inside function 'select_json' inside 'dataManager.js'\n",parseError);
-    }
-  });
-}
-
-export function insert_json(discord_id, data){
-  // Save to .json file
-  const file = `./data/${discord_id}.json`;
-  fs.writeFile(file, JSON.stringify(data, null, 2), (error) => {
-    if (error) {
-      console.log("error handelling 'insert_json' function inside 'dataManager.js':\n",error);
-    }
-    return null;
-  });
+export function remove(table, column_where, equals_to){
+  /*
+    DELETE FROM ${table} WHERE ${column_where} = ${equals_to};
+    VACUUM;
+   */
+  const remove = `DELETE FROM ${table} WHERE ${column_where} = ?`
+  try {
+    db.prepare(remove).run(equals_to);
+    db.prepare('VACUUM;').run();
+  } catch (error) {
+    console.error("error handelling 'remove' function inside 'dataManager.js':\n",error);
+  }
 }
