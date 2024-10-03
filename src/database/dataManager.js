@@ -1,11 +1,14 @@
 import Database from 'better-sqlite3';
+import fs from 'fs';
+import path from 'path';
 const db = new Database(`src/database/data/data.db`);
 
 export function select(columns, table, column_where, equals_to){
   // SELECT $columns[n] FROM $table WHERE $column_where = $equals_to
   const selection = `SELECT ${columns.join(', ')} FROM ${table} WHERE ${column_where} = ?`;
   try {
-    return db.prepare(selection).get(equals_to);
+    const result = db.prepare(selection).get(equals_to);
+    return result;
   } catch (error) {
     console.error("error handelling 'select' function inside 'dataManager.js':\n", error);
   }
@@ -73,4 +76,84 @@ export function remove(table, column_where, equals_to){
   } catch (error) {
     console.error("error handelling 'remove' function inside 'dataManager.js':\n",error);
   }
+}
+
+/*
+  JSON File Setters & Getters
+*/
+
+// Generate file path based on Discord ID
+function inventoryFilePath(discordId) {
+  return path.join(`src/database/data/${discordId}.json`);
+}
+
+// Load inventory from file
+export function loadInventory(discordId) {
+  const filePath = inventoryFilePath(discordId);
+  if (fs.existsSync(filePath)) {
+    const data = fs.readFileSync(filePath, 'utf8');
+    return JSON.parse(data);
+  }
+  return { inventory: [] };
+}
+
+// Load possible items from file
+function loadPossibleItems() {
+  const filePath = path.join(__dirname, 'possibleItems.json');
+  if (fs.existsSync(filePath)) {
+      const data = fs.readFileSync(filePath, 'utf8');
+      return JSON.parse(data);
+  }
+  return {};
+}
+
+// Save inventory to file
+export function saveInventory(discordId, inventory) {
+  const filePath = inventoryFilePath(discordId);
+  fs.writeFileSync(filePath, JSON.stringify(inventory, null, 2));
+}
+
+// Add or update item in inventory based on item name
+export function updateInventory(discordId, itemName, addValue) {
+  const inventoryData = loadInventory(discordId);
+  const inventory = inventoryData.inventory;
+  const possibleItems = loadPossibleItems();
+
+  // Check if the item exists in possible items
+  if (!(itemName in possibleItems)) {
+    console.error(`Item "${itemName}" not found in possible items.`);
+    return;
+  }
+  const { id } = possibleItems[itemName];
+
+  // Find item by id in the inventory
+  const itemIndex = inventory.findIndex(item => item.id === id);
+
+  if (itemIndex >= 0) {
+    // Update existing item
+    inventory[itemIndex].amount += addValue;
+    // Remove item if amount is 0 or less
+    if (inventory[itemIndex].amount <= 0) {
+      inventory.splice(itemIndex, 1);
+    }
+  } else if (addValue > 0) {
+    // Add new item if amount is positive
+    inventory.push({ id, amount: addValue, name: itemName });
+  }
+  // Update inventoryData with the modified inventory array
+  inventoryData.inventory = inventory;
+  // Save the updated inventoryData
+  saveInventory(discordId, inventoryData);
+}
+
+// Check if an item is in the inventory by name
+export function isItemInInventory(discordId, itemName) {
+  const inventoryData = loadInventory(discordId);
+  const possibleItems = loadPossibleItems();
+  // Check if the item exists in possible items
+  if (!(itemName in possibleItems)) {
+    return false; // Item does not exist in possible items
+  }
+  const { id } = possibleItems[itemName];
+  return inventoryData.inventory.some(item => item.id === id);
 }

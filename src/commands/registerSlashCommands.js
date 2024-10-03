@@ -8,6 +8,63 @@ import {
 
 const commands = [
   {
+    name: 'cookie',
+    description: 'oh no...',
+    options: [
+      {
+        name: 'what-to-do',
+        description: 'What will you do?',
+        type: ApplicationCommandOptionType.String,
+        choices: [
+          {
+            name: 'click',
+            value: 'click',
+          },
+          {
+            name: 'shop',
+            value: 'shop',
+          }
+        ],
+        required : true
+      },
+    ],
+  },
+  {
+    name: 'getdata',
+    description: 'See some info about some data about some people (most non human)',
+    options: [
+      {
+        name: 'what-data',
+        description: 'Data on what?',
+        type: ApplicationCommandOptionType.String,
+        choices: [
+          {
+            name: 'User',
+            value: 'users',
+          },
+          {
+            name: 'Bank',
+            value: 'bank',
+          },
+          {
+            name: 'Inventory',
+            value: 'inventory',
+          }
+        ],
+        required: true
+      },
+      {
+        name: 'who',
+        description: 'Data on Who? (doesnt work on inventory)',
+        type: ApplicationCommandOptionType.String,
+      }
+    ],
+  },
+  {
+    name: 'help',
+    description: 'See help on commands.'
+  },
+  {
     name: 'ping',
     description: 'pong'
   },
@@ -56,6 +113,10 @@ const commands = [
     ],
   },
   {
+    name: 'shop',
+    description: 'Small shop for some basic items.'
+  },
+  {
     name: 'slotmachine',
     description: `Let's go gambling!`,
     options: [
@@ -72,24 +133,6 @@ const commands = [
         required: true
       }
     ]
-  },
-  {
-    name: 'cookie',
-    description: 'oh no...',
-    options: [
-      {
-        name: 'what-to-do',
-        description: 'What will you do?',
-        type: ApplicationCommandOptionType.String,
-        choices: [
-          {
-            name: 'click',
-            value: 'click',
-          }
-        ],
-        required : true
-      },
-    ],
   },
 ];
 

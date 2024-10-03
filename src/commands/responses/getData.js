@@ -1,16 +1,21 @@
 import { select, join_select} from '../../database/dataManager.js';
+import { loadInventory } from '../../database/dataManager.js';
 
-export function getData(command, table, who){
+export function getData(command, table, who, userId, isInteraction){
   let selection = null;
   if (who == null){
-    who = command.author.username;
+    if (isInteraction){
+      who = command.user.username;
+    } else {
+      who = command.author.username;
+    }
   }
   who = who.charAt(0).toUpperCase() + who.slice(1);
   if (table == null){
     table = 'users'
   }
   if (table.toLowerCase() in selection_handler){
-    selection = selection_handler[table](who);
+    selection = selection_handler[table](who, userId);
   }
   if (selection == null){
     command.reply("No data found!");
@@ -29,7 +34,7 @@ export function getData(command, table, who){
       selection_result += "\n";
     }
   }
-  command.channel.send(`~ __{ Results }__ ~\n${selection_result}`);
+  command.reply({content: `~ __{ Results }__ ~\n${selection_result}`, ephemeral: true});
 }
 
 const selection_handler = {
@@ -38,6 +43,19 @@ const selection_handler = {
   },
   'bank': (who) => {
     return join_select(["brl AS BRL$", "dollars AS USD$", "gold AS Gold"], "bank", "user_name", who);
+  },
+  'inventory': (who, userId) => {
+    const inventoryData = loadInventory(userId);
+    if (!inventoryData || !Array.isArray(inventoryData.inventory)) {
+      return {Iventory: `No Items Found`};
+    }
+    const result = {};
+    for (const item of inventoryData.inventory) {
+      const key = `**~ { __${item.name}__ } ~**`;
+      const value = `\n*Amount: ${item.amount}*\n\`\`\`${item.description}\n\`\`\``;
+      result[key] = value;
+  }
+    return result;
   },
   'special_bank': () => {return -1},
   'secret_bank': () => {return -1},

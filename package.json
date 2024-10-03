@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "regSlashCmd": "node src/commands/registerSlashCommands.js",
+    "slashCMD": "node src/commands/registerSlashCommands.js",
     "createDB": "node src/database/createDatabase.js",
     "start": "start.bat"
   },

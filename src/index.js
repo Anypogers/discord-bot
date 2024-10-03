@@ -31,7 +31,7 @@ client.on("messageCreate", (message) => {
   if (message.author.bot) {
     return;
   }
-  const commandName = message.content.slice(commandPrefix.length).trim().split(' ')[0]; // Extract the command name
+  const commandName = message.content.slice(commandPrefix.length).trim().split(' ')[0].toLowerCase(); // Extract the command name
   if (commandName.split(' ')[0] in commandHandler) {
     try {
       commandHandler[commandName](message); // Pass the message object and args

@@ -56,12 +56,6 @@ const housingTable = db.prepare(`
     FOREIGN KEY (user_id) REFERENCES users(discord_id)
   );
 `);
-const itemsTable = db.prepare(`
-  CREATE TABLE IF NOT EXISTS items(
-    name TEXT NOT NULL PRIMARY KEY,
-    description TEXT
-  );
-`);
 
 try{
   console.log("Creating tables...")

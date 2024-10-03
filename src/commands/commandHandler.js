@@ -23,9 +23,9 @@ const commands = {
     const args = getArgs(command)[1];
     response.cookie(command, choice, args, getUserId(command));
   },
-  'getData': (command) => {
+  'getdata': (command) => {
     const args = getArgs(command);
-    response.getData(command, args[0], args[1]);
+    response.getData(command, args[0], args[1], getUserId(command), isInteraction(command));
   },
   'help': (command) => {
     response.help(command);
@@ -42,22 +42,32 @@ function getMessage(command){
   
 function getArgs(command){
   if (isInteraction(command)){
-    const result = command.options._hoistedOptions.map(option => option.value);
-    return result;
+    try{
+      const result = command.options._hoistedOptions.map(option => option.value);
+      return result;
+    } catch (error) {
+      console.log("error handelling 'getArgs' function inside 'commandHandlers.js'\n", error)
+    }
+    return null;
   }
   const result = getMessage(command).split(' ').slice(1);
   return result;
 }
 
 function isInteraction(command){
-  return command.isCommand && command.commandName !== undefined;
+  try {
+    const isInteraction = command.isCommand && command.commandName !== undefined;
+    return isInteraction;
+  } catch (error) {
+    console.log("error handelling 'isInteraction' function inside 'commandHandlers.js'\n", error)
+  }
 }
 
 function getUserId(command){
   if (isInteraction(command)){
-    return command.user.id;
+    return BigInt(command.user.id);
   } else {
-    return command.author.id;
+    return BigInt(command.author.id);
   }
 }
 
