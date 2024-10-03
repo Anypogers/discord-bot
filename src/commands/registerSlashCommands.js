@@ -8,6 +8,10 @@ import {
 
 const commands = [
   {
+    name: 'bounty',
+    description: 'In need of money?',
+  },
+  {
     name: 'cookie',
     description: 'oh no...',
     options: [

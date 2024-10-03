@@ -29,6 +29,9 @@ const commands = {
   },
   'help': (command) => {
     response.help(command);
+  },
+  'bounty': (command) => {
+    response.bounty(command, getArgs(command)[0], getArgs(command)[1]);
   }
 };
 
