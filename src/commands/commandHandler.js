@@ -31,7 +31,9 @@ const commands = {
     response.help(command);
   },
   'bounty': (command) => {
-    response.bounty(command, getArgs(command)[0], getArgs(command)[1]);
+    const reward = getArgs(command).at(0);
+    const objective = getArgs(command).slice(1).join(' ');
+    response.bounty(command, reward, objective);
   }
 };
 

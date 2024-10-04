@@ -94,12 +94,12 @@ export function loadInventory(discordId) {
     const data = fs.readFileSync(filePath, 'utf8');
     return JSON.parse(data);
   }
-  return { inventory: [] };
+  return null;
 }
 
 // Load possible items from file
 function loadPossibleItems() {
-  const filePath = path.join(__dirname, 'possibleItems.json');
+  const filePath = path.join('src/database/data/possibleItems.json');
   if (fs.existsSync(filePath)) {
       const data = fs.readFileSync(filePath, 'utf8');
       return JSON.parse(data);
@@ -115,7 +115,11 @@ export function saveInventory(discordId, inventory) {
 
 // Add or update item in inventory based on item name
 export function updateInventory(discordId, itemName, addValue) {
-  const inventoryData = loadInventory(discordId);
+  let inventoryData = loadInventory(discordId);
+  if (inventoryData == null){
+    saveInventory(discordId, {inventory: []})
+    inventoryData = loadInventory(discordId);
+  }
   const inventory = inventoryData.inventory;
   const possibleItems = loadPossibleItems();
 
@@ -124,7 +128,7 @@ export function updateInventory(discordId, itemName, addValue) {
     console.error(`Item "${itemName}" not found in possible items.`);
     return;
   }
-  const { id } = possibleItems[itemName];
+  const { id, description } = possibleItems[itemName];
 
   // Find item by id in the inventory
   const itemIndex = inventory.findIndex(item => item.id === id);
@@ -138,7 +142,7 @@ export function updateInventory(discordId, itemName, addValue) {
     }
   } else if (addValue > 0) {
     // Add new item if amount is positive
-    inventory.push({ id, amount: addValue, name: itemName });
+    inventory.push({ id, name: itemName, description, amount: addValue });
   }
   // Update inventoryData with the modified inventory array
   inventoryData.inventory = inventory;

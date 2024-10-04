@@ -2,34 +2,38 @@ import { EmbedBuilder } from 'discord.js';
 import dotenv from 'dotenv';
 dotenv.config();
 
-const bounty = {
-    "objective": null,
-    'reward': null,
-    "completed": false
+const bounties = {
+  'reward': "",
+  "objective": " ",
+  "completed": false
 };
 
-export function bounty(command, val1, val2){
+export function bounty(command, reward, objective){
   if (BigInt(command.author.id) == process.env.OWNER_ID) {
-    if (val2 != null) {
-      bounty.objective = val1;
-      bounty.reward = val2
-    } else {
-      bounty.completed = val1
+    if (reward != null) {
+      if (reward.toLowerCase() === 'true' || reward.toLowerCase() === 'false') {
+        bounties.completed = reward.toLowerCase() === 'true';
+      } else {
+        bounties.reward = reward;
+      }
     }
-    return
+    if (objective != false) {
+      bounties.objective = objective
+    }
   }
   command.reply({ephemeral:true, embeds: [show_bounty()]});
 }
 
 function show_bounty(){
+  const X = bounties.completed ? '~~' : '';
   const embed = new EmbedBuilder()
   .setTitle('**__Bounty Board__**')
-  .setDescription(`-------------\n`)
+  .setDescription(`\n`)
   .setColor('#000000')
   .addFields(
     {
-      name: `Reward: ${bounty.reward}`,
-      value: `"*.${bounty.objective}*"`,
+      name: `${X}Reward: ${bounties.reward}${X}`,
+      value: `_${X}${bounties.objective}${X}_`,
     }
   );
   return embed;

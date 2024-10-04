@@ -47,7 +47,7 @@ const selection_handler = {
   'inventory': (who, userId) => {
     const inventoryData = loadInventory(userId);
     if (!inventoryData || !Array.isArray(inventoryData.inventory) || !inventoryData.inventory) {
-      return {Iventory: `No Items Found`};
+      return null;
     }
     const result = {};
     for (const item of inventoryData.inventory) {

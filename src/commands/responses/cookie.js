@@ -1,4 +1,4 @@
-import { select, update } from "../../database/dataManager.js";
+import { select, update, updateInventory } from "../../database/dataManager.js";
 import { EmbedBuilder } from "discord.js";
 
 const cookies = {
@@ -12,10 +12,11 @@ const shopItems = new Array(6);
 const possibleShopItems = {
   'Common': [
     {
-      'name': 'cookie',
+      'name': 'Cookie',
       'price': 5,
       'stock': 10,
-      'result': function(command) {
+      'result': (command, userId) => {
+        updateInventory(userId, 'Cookie', 1);
         command.reply("Thank you for buying cookies!\n...\n*with cookies...*")
       }
     },
@@ -25,7 +26,7 @@ const possibleShopItems = {
       'name': 'Dollar',
       'price': 2,
       'stock': 10,
-      'result': function(command, userId) {
+      'result': (command, userId) => {
         let user_money = select(['dollars'], 'bank', 'user_id', userId).dollars;
         user_money += 1;
         update('bank', ['dollars'], [(user_money)], 'user_id', userId);
@@ -36,24 +37,27 @@ const possibleShopItems = {
       'name': 'Mystery Box',
       'price': 75,
       'stock': 2,
-      'result': function(command) {
-        command.reply("Hope you get something good!")
+      'result': (command, userId) => {
+        updateInventory(userId, 'Mystery Box', 1);
+        command.reply("Hope you get something good!");
       }
     },
     {
       'name': 'Item Upgrade',
       'price': 200,
       'stock': 1,
-      'result': function(command) {
-        command.reply("Hopefully this will come in handy!")
+      'result': (command, userId) => {
+        updateInventory(userId, 'Item Upgrade', 1);
+        command.reply("Hopefully this will come in handy!");
       }
     },
     {
       'name': 'Simple Key',
       'price': 30,
       'stock': 1,
-      'result': function(command) {
-        command.reply("Do you have something to use it on?")
+      'result': (command, userId) => {
+        updateInventory(userId, 'Simple Key', 1);
+        command.reply("Do you have something to use it on?");
       }
     },
   ],
@@ -62,7 +66,7 @@ const possibleShopItems = {
       'name': 'Gold Star',
       'price': 1000,
       'stock': 1,
-      'result': function(command) {
+      'result': (command, userId) => {
         let user_stars = select(['gold_stars'], 'secret_bank', 'user_id', userId).gold_stars;
         user_stars += 1;
         update('secret_bank', ['gold_stars'], [(user_stars)], 'user_id', userId);
@@ -73,14 +77,15 @@ const possibleShopItems = {
       'name': 'Gold Star Fragment',
       'price': 300,
       'stock': 1,
-      'result': function(command) {
-        command.reply("If you can *fuse* it togueter with *other* fragments it will become something **wonderfull**!")
+      'result': (command, userId) => {
+        updateInventory(userId, 'Gold Star Fragment', 1);
+        command.reply("If you can *fuse* it togueter with *other* fragments it will become something **wonderfull**!");
       }
     },
   ]
 }
 
-export function cookie(command, choice = 'stats', args = null, userId) {
+export async function cookie(command, choice = 'stats', args = null, userId) {
   if (args == undefined) {
     args = null;
   }
@@ -95,7 +100,7 @@ export function cookie(command, choice = 'stats', args = null, userId) {
   }
 }
 
-function showShop(command){
+async function showShop(command){
   const isShopEmpty = shopItems.every(item => item === undefined);
   if (isShopEmpty) {
     generateShop();
