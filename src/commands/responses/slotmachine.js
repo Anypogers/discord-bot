@@ -51,7 +51,7 @@ function generateSlotmachine(currency, jackpot, final_balance){
         inline: true,
       },
       {
-        name: `~ { *Results* }~`,
+        name: `~ { *Results* } ~`,
         value: `Pull : ${jackpot[1]}\nJackpot : ${jackpot[0]}\nReward: ${jackpot[2]}$\nFinal Balance: ${final_balance}`,
         inline: true,
       }
