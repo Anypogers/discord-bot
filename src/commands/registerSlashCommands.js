@@ -12,6 +12,79 @@ const commands = [
     description: 'In need of money?',
   },
   {
+    name: 'buckshot',
+    description: 'You know the drill...',
+    options: [
+      {
+        name: "Options",
+        description: "What do you want?",
+        type: ApplicationCommandOptionType.String,
+        choices: [
+          {
+            name: "Stats",
+            value: "stats",
+          },
+          {
+            name: "Sign Up (100$ USD)",
+            value: "sign"
+          },
+          {
+            name: "Shoot",
+            value: "shoot",
+          },
+          {
+            name: "Use",
+            value: "use"
+          }
+        ],
+        required: true
+      },
+      {
+        name: "Sub Option",
+        description: "Not every main option needs a sub option.",
+        type: ApplicationCommandOptionType.String,
+        choices: [
+          {
+            name: "Yourself",
+            value: "yourself",
+          },
+          {
+            name: "Oponent",
+            value: "oponent"
+          },
+          {
+            name: "Cuffs",
+            value: "cuffs",
+          },
+          {
+            name: "Sigs",
+            value: "sigs",
+          },
+          {
+            name: "Saw",
+            value: "saw",
+          },
+          {
+            name: "Beer",
+            value: "beer",
+          },
+          {
+            name: "Glass",
+            value: "glass",
+          },
+          {
+            name: "Inverter",
+            value: "inverter",
+          },
+          {
+            name: "Phone",
+            value: "phone",
+          }
+        ]
+      }
+    ]
+  },
+  {
     name: 'cookie',
     description: 'oh no...',
     options: [

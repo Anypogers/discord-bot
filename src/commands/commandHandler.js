@@ -34,6 +34,10 @@ const commands = {
     const reward = getArgs(command).at(0);
     const objective = getArgs(command).slice(1).join(' ');
     response.bounty(command, reward, objective);
+  },
+  "kms": (command) => {
+    const userId = getUserId(command);
+    response.kms(command, userId);
   }
 };
 
@@ -70,9 +74,9 @@ function isInteraction(command){
 
 function getUserId(command){
   if (isInteraction(command)){
-    return BigInt(command.user.id);
+    return (command.user.id);
   } else {
-    return BigInt(command.author.id);
+    return (command.author.id);
   }
 }
 

@@ -1,7 +1,7 @@
 export function help(command){
   const chance = Math.random();
   const responses = [
-    "**[!]** *ᵇᵘᵗ ⁿᵒᵇᵒᵈʸ ᶜᵃᵐᵉ*", // :scared:
+    "**[!]** *ᵇᵘᵗ ⁿᵒᵇᵒᵈʸ ᶜᵃᵐᵉ*", // D:
     "Why would **I** help **you**?",
     "Nuh uh!",
     "Help? That's a strong word...",
@@ -12,8 +12,9 @@ export function help(command){
     "*zzzZZZ*",
     "Did you try Googling it*?*",
     "Go ask ChatGPT.",
+    "Alexa, help him with the bot commands.",
     "I invoke the 5th.",
-    "+Blocked +DontCare + DidntAsk +SkillIssue +Stfu",
+    "+Blocked +DontCare + DidntAsk +SkillIssue +Stfu +kys",
     "_ _", //
     "Check on the wiki.",
     "Hey @Any, can ya help him*?*", // No, I can't.
