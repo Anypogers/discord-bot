@@ -8,4 +8,3 @@ export * from './help.js';
 export * from './shop.js';
 export * from './bounty.js';
 export * from './kms.js';
-export * from './buckshot.js'
