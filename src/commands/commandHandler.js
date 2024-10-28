@@ -38,7 +38,7 @@ const commands = {
   "kms": (command) => {
     const userId = getUserId(command);
     response.kms(command, userId);
-  }
+  },
 };
 
 function getMessage(command){
