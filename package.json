@@ -4,9 +4,7 @@
   "version": "1.0.0",
   "main": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "slashCMD": "node src/commands/registerSlashCommands.js",
-    "createDB": "node src/database/createDatabase.js",
     "start": "start.bat"
   },
   "keywords": [],
@@ -15,7 +13,7 @@
   "description": "",
   "dependencies": {
     "better-sqlite3": "^11.3.0",
-    "discord.js": "^14.16.2",
+    "discord.js": "^14.14.1",
     "dotenv": "^16.4.5"
   }
 }

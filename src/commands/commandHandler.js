@@ -1,51 +1,22 @@
 import * as response from './responses/index.js';
-const commandPrefix = '&';
 
 const commands = {
-  'ping': (command) => {
-    response.ping(command);
-  },
-  'rng': (command) => {
+  'rng': async (command) => {
     const min = getArgs(command)[0];
     const max = getArgs(command)[1];
     response.rng(command, min, max);
   },
-  'slotmachine': (command) => {
-    const currency = getArgs(command)[0];
-    response.slotmachine(command, currency, getUserId(command));
+  'echo': async (command) => {
+    const message = getMessage(command);
+    response.echo(command, message);
   },
-  'rps': (command) => {
-    const choice = getArgs(command)[0];
-    response.rps(command, choice,isInteraction(command));
-  },
-  'cookie': (command) => {
-    const choice = getArgs(command)[0];
-    const args = getArgs(command)[1];
-    response.cookie(command, choice, args, getUserId(command));
-  },
-  'getdata': (command) => {
-    const args = getArgs(command);
-    response.getData(command, args[0], args[1], getUserId(command), isInteraction(command));
-  },
-  'help': (command) => {
-    response.help(command);
-  },
-  'bounty': (command) => {
-    const reward = getArgs(command).at(0);
-    const objective = getArgs(command).slice(1).join(' ');
-    response.bounty(command, reward, objective);
-  },
-  "kms": (command) => {
-    const userId = getUserId(command);
-    response.kms(command, userId);
-  },
-};
+}
 
 function getMessage(command){
   if (isInteraction(command)){
     return command.commandName;
   }
-  const result = command.content.slice(commandPrefix.length).trim();
+  const result = command.content.split(" ").slice(1).join(" ");
   return result;
 }
   
